@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zhaojun.me","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="zookeeper是一个高性能、开源分布式应用协调服务">
+<meta property="og:type" content="article">
+<meta property="og:title" content="zookeeper1">
+<meta property="og:url" content="http://zhaojun.me/2017/09/24/zookeeper1/index.html">
+<meta property="og:site_name" content="记录">
+<meta property="og:description" content="zookeeper是一个高性能、开源分布式应用协调服务">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://zhaojun.me/2017/09/24/zookeeper1/a.jpeg">
+<meta property="og:image" content="http://zhaojun.me/2017/09/24/zookeeper1/b.jpeg">
+<meta property="og:image" content="http://zhaojun.me/2017/09/24/zookeeper1/c.jpeg">
+<meta property="og:image" content="http://zhaojun.me/2017/09/24/zookeeper1/d.jpeg">
+<meta property="article:published_time" content="2017-09-24T05:18:49.000Z">
+<meta property="article:modified_time" content="2017-11-06T14:44:49.000Z">
+<meta property="article:author" content="zj">
+<meta property="article:tag" content="zookeeper">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://zhaojun.me/2017/09/24/zookeeper1/a.jpeg">
+
+<link rel="canonical" href="http://zhaojun.me/2017/09/24/zookeeper1/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>zookeeper1 | 记录</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="记录" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">记录</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">我本可以</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://zhaojun.me/2017/09/24/zookeeper1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zj">
+      <meta itemprop="description" content="学了忘、忘了查、查了懵逼、懵逼了学。故有此博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          zookeeper1
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-09-24 13:18:49" itemprop="dateCreated datePublished" datetime="2017-09-24T13:18:49+08:00">2017-09-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2017-11-06 22:44:49" itemprop="dateModified" datetime="2017-11-06T22:44:49+08:00">2017-11-06</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/zookeeper/" itemprop="url" rel="index"><span itemprop="name">zookeeper</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">zookeeper是一个高性能、开源分布式应用协调服务</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="1、数据结构"><a href="#1、数据结构" class="headerlink" title="1、数据结构"></a>1、数据结构</h3><p>简单的说，zookeeper=数据结构+通知机制。其中数据结构跟文件系统的目录很相似：</p>
+<img src="/2017/09/24/zookeeper1/a.jpeg" class="" title="图1-1">  
+
+<p>树形结构中每个节点称为Znode，跟文件系统不同的是，每个Znode可以存储数据，数据大小可以在配置文件中配置，默认最大不超过1M。另外，可以对节点进行增加子节点，删除节点，修改数据等操作，并且Zookeeper能通知客户端节点发生了变化，这就是通知机制。节点共有四种类型：</p>
+<ul>
+<li>PERSISTENT-持久化目录节点：客户端与zookeeper断开连接后，该节点依旧存在</li>
+<li>PERSISTENT_SEQUENTIAL-持久化顺序编号目录节点：客户端与zookeeper断开连接后，该节点依旧存在，只是Zookeeper给该节点名称进行顺序编号(就是名称后面会加一组排序的数字)</li>
+<li>EPHEMERAL-临时目录节点：客户端与zookeeper断开连接后，该节点被删除</li>
+<li>EPHEMERAL_SEQUENTIAL-临时顺序编号目录节点：客户端与zookeeper断开连接后，该节点被删除，只是Zookeeper给该节点名称进行顺序编号</li>
+</ul>
+<h3 id="2、使用场景"><a href="#2、使用场景" class="headerlink" title="2、使用场景"></a>2、使用场景</h3><h4 id="2-1、数据发布／订阅"><a href="#2-1、数据发布／订阅" class="headerlink" title="2.1、数据发布／订阅"></a>2.1、数据发布／订阅</h4><p>发布者将数据发布到zk的一个或者一系列节点，订阅者进行数据订阅，当数据有变化时，Zookeeper通过通知机制讲数据通知给订阅者。</p>
+<h4 id="2-2、负载均衡-非主要"><a href="#2-2、负载均衡-非主要" class="headerlink" title="2.2、负载均衡(非主要)"></a>2.2、负载均衡(非主要)</h4><p>利用zookeeper的配置管理功能，步骤如下：  </p>
+<ul>
+<li>1.服务提供者把自己的域名及ip端口的映射注册到zk中 </li>
+<li>2.服务消费者通过域名从zk中获取到对应的ip及端口，这个ip及端口有多个，获取其中一个 </li>
+<li>3.当服务提供者宕机时，对应的域名IP的对应就会减少一个映射，这样就始终获取到有效的映射，就能进行负载均衡了</li>
+</ul>
+<h4 id="2-3、命名服务"><a href="#2-3、命名服务" class="headerlink" title="2.3、命名服务"></a>2.3、命名服务</h4><p>分布式应用中，通常需要有一套完整的命名规则，既能够产生唯一的名称又便于人识别和记住，通常情况下用树形的名称结构是一个理想的选择，树形的名称结构是一个有层次的目录结构，既对人友好又不会重复。说到这里你可能想到了JNDI，没错Zookeeper的Name Service与JNDI能够完成的功能是差不多的，它们都是将有层次的目录结构关联到一定资源上，但是Zookeeper的Name Service更加是广泛意义上的关联，也许你并不需要将名称关联到特定资源上，你可能只需要一个不会重复名称，就像数据库中产生一个唯一的数字主键一样。</p>
+<h4 id="2-4、配置管理"><a href="#2-4、配置管理" class="headerlink" title="2.4、配置管理"></a>2.4、配置管理</h4><p>程序总是需要配置的，如果程序分散部署在多台机器上，要逐个改变配置就变得困难。把这些配置全部放到zookeeper上去，保存在Zookeeper的某个目录节点中，然后所有相关应用程序对这个目录节点进行监听，一旦配置信息发生变化，每个应用程序就会收到Zookeeper的通知，然后从Zookeeper获取新的配置信息应用到系统中就好。</p>
+<img src="/2017/09/24/zookeeper1/b.jpeg" class="" title="图2-1">  
+
+
+<h4 id="2-5、集群管理"><a href="#2-5、集群管理" class="headerlink" title="2.5、集群管理"></a>2.5、集群管理</h4><p>所谓集群管理无在乎两点：是否有机器退出和加入、选举master。<br>对于第一点，所有机器约定在父目录GroupMembers下创建临时目录节点，然后监听父目录节点的子节点变化消息。一旦有机器挂掉，该机器与zookeeper的连接断开，其所创建的临时目录节点被删除，所有其他机器都收到通知：某个兄弟目录被删除，于是，所有人都知道：它上船了。新机器加入也是类似，所有机器收到通知：新兄弟目录加入，highcount又有了。<br>对于第二点，我们稍微改变一下，所有机器创建临时顺序编号目录节点，每次选取编号最小的机器作为master就好。</p>
+<img src="/2017/09/24/zookeeper1/c.jpeg" class="" title="图2-2">  
+
+
+<h4 id="2-6、分布式锁"><a href="#2-6、分布式锁" class="headerlink" title="2.6、分布式锁"></a>2.6、分布式锁</h4><p>有了zookeeper的一致性文件系统，锁的问题变得容易。锁服务可以分为两类，一个是保持独占，另一个是控制时序。</p>
+<p>对于第一类，我们将zookeeper上的一个znode看作是一把锁，通过createznode的方式来实现。所有客户端都去创建同一个目录节点，最终成功创建的那个客户端也即拥有了这把锁。用完删除掉自己创建的目录节点就释放出锁。</p>
+<p>对于第二类， 如果目录节点已经预先存在，所有客户端在它下面创建临时顺序编号目录节点，和选master一样，编号最小的获得锁，用完删除，依次方便。</p>
+<h4 id="2-7、队列"><a href="#2-7、队列" class="headerlink" title="2.7、队列"></a>2.7、队列</h4><p>两种类型的队列：</p>
+<ul>
+<li>同步队列，当一个队列的成员都聚齐时，这个队列才可用，否则一直等待所有成员到达。</li>
+<li>队列按照FIFO方式进行入队和出队操作。</li>
+</ul>
+<p>第一类，在约定目录下创建临时目录节点，监听节点数目是否是我们要求的数目。第二类，和分布式锁服务中的控制时序场景基本原理一致，入列有编号，出列按编号(前文中的顺序编号节点，带有顺序)。</p>
+<h3 id="3、基本概念"><a href="#3、基本概念" class="headerlink" title="3、基本概念"></a>3、基本概念</h3><h4 id="3-1、集群角色"><a href="#3-1、集群角色" class="headerlink" title="3.1、集群角色"></a>3.1、集群角色</h4><p>当使用zookeeper搭建集群时，有三种角色：</p>
+<ul>
+<li>Leader：为客户端提供读和写服务</li>
+<li>Follower：提供读服务，写服务会转交给Leader，参与选举Observer </li>
+<li>Observer：跟Follower的区别是不参与投票，一般是为了增强zk集群的读请求并发能力</li>
+</ul>
+<p>结构图如下：</p>
+<img src="/2017/09/24/zookeeper1/d.jpeg" class="" title="图3-1">  
+
+<h4 id="3-2、会话-session"><a href="#3-2、会话-session" class="headerlink" title="3.2、会话(session)"></a>3.2、会话(session)</h4><p>客户端向服务端的请求连接。通过心跳检测保持客户端连接的存活。接收来自服务端的watch事件通知。</p>
+<h4 id="3-2、版本"><a href="#3-2、版本" class="headerlink" title="3.2、版本"></a>3.2、版本</h4><p>每个节点都会有一个版本的属性，操作节点时，版本号会+1，有点类似与mysql中的记录版本号。</p>
+<ul>
+<li>Version：当前Znode的版本</li>
+<li>Cversion：当前Znode子节点版本</li>
+<li>Aversion：当前Znode的ACl版本<br>ACL(Access Control Lists)代表节点的权限控制，类似于linux/unix的权限控制</li>
+<li>CREATE：创建子节点的权限</li>
+<li>READ:获取节点数据和子节点列表的权限</li>
+<li>WRITE 更新节点数据的权限</li>
+<li>DELETE：删除子节点的权限</li>
+<li>ADMIN：设置节点ACL的权限</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/zookeeper/" rel="tag"># zookeeper</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/09/24/Java-Annotation/" rel="prev" title="Java注解">
+      <i class="fa fa-chevron-left"></i> Java注解
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/09/24/Java-Exception/" rel="next" title="Java异常">
+      Java异常 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">1.</span> <span class="nav-text">1、数据结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">2.</span> <span class="nav-text">2、使用场景</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#2-1%E3%80%81%E6%95%B0%E6%8D%AE%E5%8F%91%E5%B8%83%EF%BC%8F%E8%AE%A2%E9%98%85"><span class="nav-number">2.1.</span> <span class="nav-text">2.1、数据发布／订阅</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-2%E3%80%81%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1-%E9%9D%9E%E4%B8%BB%E8%A6%81"><span class="nav-number">2.2.</span> <span class="nav-text">2.2、负载均衡(非主要)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-3%E3%80%81%E5%91%BD%E5%90%8D%E6%9C%8D%E5%8A%A1"><span class="nav-number">2.3.</span> <span class="nav-text">2.3、命名服务</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-4%E3%80%81%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86"><span class="nav-number">2.4.</span> <span class="nav-text">2.4、配置管理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-5%E3%80%81%E9%9B%86%E7%BE%A4%E7%AE%A1%E7%90%86"><span class="nav-number">2.5.</span> <span class="nav-text">2.5、集群管理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-6%E3%80%81%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81"><span class="nav-number">2.6.</span> <span class="nav-text">2.6、分布式锁</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-7%E3%80%81%E9%98%9F%E5%88%97"><span class="nav-number">2.7.</span> <span class="nav-text">2.7、队列</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%E3%80%81%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="nav-number">3.</span> <span class="nav-text">3、基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1%E3%80%81%E9%9B%86%E7%BE%A4%E8%A7%92%E8%89%B2"><span class="nav-number">3.1.</span> <span class="nav-text">3.1、集群角色</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2%E3%80%81%E4%BC%9A%E8%AF%9D-session"><span class="nav-number">3.2.</span> <span class="nav-text">3.2、会话(session)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2%E3%80%81%E7%89%88%E6%9C%AC"><span class="nav-number">3.3.</span> <span class="nav-text">3.2、版本</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zj</p>
+  <div class="site-description" itemprop="description">学了忘、忘了查、查了懵逼、懵逼了学。故有此博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">75</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zj</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

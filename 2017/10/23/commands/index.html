@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zhaojun.me","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="常用命令总结">
+<meta property="og:type" content="article">
+<meta property="og:title" content="常用命令">
+<meta property="og:url" content="http://zhaojun.me/2017/10/23/commands/index.html">
+<meta property="og:site_name" content="记录">
+<meta property="og:description" content="常用命令总结">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2017-10-23T03:37:59.000Z">
+<meta property="article:modified_time" content="2019-09-08T06:16:08.000Z">
+<meta property="article:author" content="zj">
+<meta property="article:tag" content="other">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://zhaojun.me/2017/10/23/commands/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>常用命令 | 记录</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="记录" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">记录</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">我本可以</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://zhaojun.me/2017/10/23/commands/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zj">
+      <meta itemprop="description" content="学了忘、忘了查、查了懵逼、懵逼了学。故有此博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          常用命令
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-10-23 11:37:59" itemprop="dateCreated datePublished" datetime="2017-10-23T11:37:59+08:00">2017-10-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-09-08 14:16:08" itemprop="dateModified" datetime="2019-09-08T14:16:08+08:00">2019-09-08</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/other/" itemprop="url" rel="index"><span itemprop="name">other</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">常用命令总结</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>./nginx -t 检查配置</p>
+<p>./nginx -s reload  重新加载配置文件</p>
+<p>service nginx restart 重启nginx服务</p>
+<p>select * from test.orderMemDB-lineItemMap where pk = 8593;<br>delete from akulaku.memCacheKeys where pk = ‘insuranceMemDB-insuranceMap’<br>select * from akulaku.memCacheKeys</p>
+<p>OPERATE MAP_PUT(ids, 1, 1) ON akulaku.activityModuleMemDB-serviceActivityModuleMap where PK = 2</p>
+<p>OPERATE LIST_APPEND(listbin, 1), LIST_APPEND(listbin2, 10) ON test.demo where PK = ‘key1’</p>
+<p>sudo iptables -I INPUT -p udp –dport 5060 -j DROP<br>sudo iptables -I INPUT -s 192.168.1.0/24 -p tcp –dport 80 -j ACCEPT<br>sudo iptables -I INPUT -s 117.102.124.150 -j ACCEPT</p>
+<p>拷贝文件 服务器到本地(./代表当前目录)<br>scp -i ~/akulaku-test <a href="mailto:&#117;&#98;&#117;&#x6e;&#116;&#x75;&#64;&#53;&#50;&#46;&#x38;&#x2e;&#x31;&#x30;&#56;&#46;&#50;&#x34;&#x37;">&#117;&#98;&#117;&#x6e;&#116;&#x75;&#64;&#53;&#50;&#46;&#x38;&#x2e;&#x31;&#x30;&#56;&#46;&#50;&#x34;&#x37;</a>:/home/ubuntu/data/akulaku_sources/lemon-nodejs/result.json ./<br>本地到服务器<br>scp -i  ~/akulaku-test lineiteminfo.js <a href="mailto:&#x75;&#x62;&#117;&#x6e;&#x74;&#x75;&#x40;&#53;&#50;&#46;&#56;&#46;&#x31;&#x30;&#x38;&#x2e;&#50;&#x34;&#x37;">&#x75;&#x62;&#117;&#x6e;&#x74;&#x75;&#x40;&#53;&#50;&#46;&#56;&#46;&#x31;&#x30;&#x38;&#x2e;&#50;&#x34;&#x37;</a>:/home/ubuntu/data/akulaku_sources/lemon-nodejs/  </p>
+<p>sudo freeswitch -nc<br>fs_cli</p>
+<p>查询端口占用，之后根据pid查询任务<br>netstat -anp|grep 9999<br>ps -aux|grep 31727</p>
+<p> kill -9 $pid</p>
+<p>show full processlist; </p>
+<p>sofia profile internal siptrace on<br>sofia profile internal siptrace off</p>
+<p>sofia status profile internal<br>sofia status profile internal reg</p>
+<p>sudo iptables -I INPUT -p udp –dport 5060 -j DROP<br>sudo iptables -I INPUT -s 192.168.1.0/24 -p tcp –dport 80 -j ACCEPT<br>sudo iptables -I INPUT -s 117.102.124.150 -j ACCEPT</p>
+<p>ssh -i  ~/akulaku-test <a href="mailto:&#x75;&#98;&#117;&#110;&#116;&#117;&#64;&#x35;&#50;&#46;&#x38;&#46;&#x31;&#x30;&#56;&#x2e;&#x32;&#52;&#55;">&#x75;&#98;&#117;&#110;&#116;&#117;&#64;&#x35;&#50;&#46;&#x38;&#46;&#x31;&#x30;&#56;&#x2e;&#x32;&#52;&#55;</a></p>
+<p>asinfo -v “truncate:namespace=akulaku;set=akulaku.activityModuleMemDB-serviceActivityModuleMap;”</p>
+<p>rdb -e “select * from t_call where create_time &gt; 1509494400000 and create_time &lt;1512000000000” &gt;call1509494400000.sql</p>
+<p>sudo add-apt-repository ppa:cwchien/gradle  </p>
+<p>sudo apt-get update  更新源</p>
+<p>apt-cache search gradle  查看可安装的gradle版本</p>
+<p>apt-cache search commoncpp2</p>
+<p>javac -cp asterisk-java.jar HelloAgiScript.java<br>java -jar asterisk-java.jar<br>java -cp asterisk-java.jar:. org.asteriskjava.fastagi.DefaultAgiServer</p>
+<p>curl -l “<a target="_blank" rel="noopener" href="http://127.0.0.1:8080/call/api/call/dialstatus?dialResult=&quot;busy&quot;&quot;">http://127.0.0.1:8080/call/api/call/dialstatus?dialResult=&quot;busy&quot;&quot;</a></p>
+<p>mysql –local-infile -u root -p123456</p>
+<p>导出多个表<br>mysqldump -uroot -p123456 –databases calldb –tables t_call_20171120 t_call_20171121 t_call_20171122 t_call_20171123 t_call_20171124  &gt; t_call_20.sql<br>单个表<br>mysqldump -uroot -p123456 –databases installmentdb –tables t_activity_module  &gt; t_activity_module.sql</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/other/" rel="tag"># other</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/10/22/Kafka/" rel="prev" title="Kafka">
+      <i class="fa fa-chevron-left"></i> Kafka
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/10/31/netty/" rel="next" title="netty学习">
+      netty学习 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zj</p>
+  <div class="site-description" itemprop="description">学了忘、忘了查、查了懵逼、懵逼了学。故有此博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">75</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zj</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

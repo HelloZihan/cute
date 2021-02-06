@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zhaojun.me","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Asterisk是一个自动拨打电话的软件,能够直接使用配置文件进行控制。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Asterisk">
+<meta property="og:url" content="http://zhaojun.me/2017/08/04/Asterisk/index.html">
+<meta property="og:site_name" content="记录">
+<meta property="og:description" content="Asterisk是一个自动拨打电话的软件,能够直接使用配置文件进行控制。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2017-08-04T06:13:35.000Z">
+<meta property="article:modified_time" content="2017-11-01T11:59:48.000Z">
+<meta property="article:author" content="zj">
+<meta property="article:tag" content="Asterisk">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://zhaojun.me/2017/08/04/Asterisk/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Asterisk | 记录</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="记录" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">记录</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">我本可以</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://zhaojun.me/2017/08/04/Asterisk/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zj">
+      <meta itemprop="description" content="学了忘、忘了查、查了懵逼、懵逼了学。故有此博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Asterisk
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-08-04 14:13:35" itemprop="dateCreated datePublished" datetime="2017-08-04T14:13:35+08:00">2017-08-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2017-11-01 19:59:48" itemprop="dateModified" datetime="2017-11-01T19:59:48+08:00">2017-11-01</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Asterisk/" itemprop="url" rel="index"><span itemprop="name">Asterisk</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">Asterisk是一个自动拨打电话的软件,能够直接使用配置文件进行控制。</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="1、简介"><a href="#1、简介" class="headerlink" title="1、简介"></a>1、简介</h3><p>Asterisk是一个支持多种协议的通话软件，因为网上资料很少，所以大部分都来源于官网的文档。很多都要对着文档一点点摸索。<br><a target="_blank" rel="noopener" href="https://wiki.asterisk.org/wiki/display/AST/Home">Asterisk学习</a></p>
+<h3 id="2、安装"><a href="#2、安装" class="headerlink" title="2、安装"></a>2、安装</h3><p>上述链接中有对应的安装步骤，由于我用的是ubuntu系统，所以只记录一下ubuntu的安装步骤：</p>
+<p>注意：建议在安装之前使用命令<code>sudo apt-get install libcurl4-openssl-dev</code>,然后可以在命令行调用curl命令试试，这样安装asterisk软件之后可以在配置文件中使用curl命令发起http请求。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">sudo wget 下载链接 </span><br><span class="line">tar -zxvf 文件名 </span><br><span class="line">cd dahdi-linux-complete-2.X.Y+2.X.Y</span><br><span class="line">sudo .&#x2F;configure --prefix&#x3D;绝对路径（安装的目录）</span><br><span class="line">sudo make</span><br><span class="line">sudo make install</span><br><span class="line">sudo make samples （生成默认配置文件）</span><br><span class="line">sudo make config   (在ubuntu里生成启动脚本，如&#x2F;etc&#x2F;init.d&#x2F;目录下的启动文件)</span><br><span class="line">sudo make install-logrotate （生成日志文件）</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>安装的时候注意提示，缺的包就对应去安装，安装成功会有相应的提示，就可以进行下一步。</p>
+<h3 id="3、基础命令"><a href="#3、基础命令" class="headerlink" title="3、基础命令"></a>3、基础命令</h3><p>启动：<br><code>sudo /etc/init.d/asterisk start</code><br>重启：<br><code>sudo /etc/init.d/asterisk restart</code><br>停止：<br><code>sudo /etc/init.d/asterisk stop</code><br>查看状态：<br><code>sudo /etc/init.d/asterisk status</code><br>启动之后可以调用以下命令进入控制台：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">sudo .&#x2F;..&#x2F;..&#x2F;sbin&#x2F;asterisk -r</span><br><span class="line">sudo .&#x2F;asterisk -r</span><br><span class="line">就是进入软件安装的目录里的sbin目录之后，带上r参数运行里面的asterisk文件来进入控制台。可以在控制台里操作asterisk。</span><br><span class="line">另外，必须要用以上命令启动了才能进入控制台，不然会报错。</span><br><span class="line">例如：</span><br><span class="line">sip show peers （查看你配置了多少个客户端）</span><br></pre></td></tr></table></figure>
+<p>进入控制台以后，你还可以根据自己的操作来实时查看输出的日志(非常重要)：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">进入debug模式：</span><br><span class="line">core set verbose 5</span><br><span class="line">core set debug 5</span><br><span class="line">module reload logger</span><br></pre></td></tr></table></figure>
+<p>另外，asterisk的日志文件在安装目录里面的/var/log/asterisk目录下的messages文件里</p>
+<h3 id="4、基础配置"><a href="#4、基础配置" class="headerlink" title="4、基础配置"></a>4、基础配置</h3><p>版本号为版本为asterisk-14.6.0，其余大同小异。</p>
+<p>配置文件都在安装目录里的<code>etc/asterisk</code>目录下，当安装时使用<code>sudo make samples</code>命令后会生成一堆默认的配置文件，我们只需修改其中三个sip.conf,pjsip.conf,extensions.conf。</p>
+<p>其中sip.conf配置asterisk的对等机，asterisk使用通道(channel)来与客户端相连，一个客户端对发起一个呼叫，asterisk就会建立在彼此之间建立一个通道。建立通道的协议有很多种，sip比较常用，所以直接在sip.conf上配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">sip.conf:</span><br><span class="line">[general]    ;通用的</span><br><span class="line">context&#x3D;default</span><br><span class="line"></span><br><span class="line">[1001]       ;配置一个1001账户，新增账户直接复制1001的账户配置即可   </span><br><span class="line">type&#x3D;friend</span><br><span class="line">context&#x3D;from-internal</span><br><span class="line">host&#x3D;dynamic</span><br><span class="line">secret&#x3D;123</span><br><span class="line">disallow&#x3D;all</span><br><span class="line">allow&#x3D;ulaw</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>客户机就能使用账号1001，密码为123的账户了。</p>
+<p>pjsip.conf配置如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[transport-udp]</span><br><span class="line">type&#x3D;transport</span><br><span class="line">protocol&#x3D;udp     ;通信协议为udp</span><br><span class="line">bind&#x3D;0.0.0.0     ;支持多个网卡，只有一个网卡也可以配置127.0.0.1</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>extensions.conf配置如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">[from-internal]  ;对应sip.conf里的context&#x3D;from-internal，类似web里的context，上下文</span><br><span class="line">exten &#x3D; 150,1,Answer() ;from-internal里配置的任何账号拨打150时都会被响应</span><br><span class="line">same &#x3D; n,Wait(1)       ;然后等待一秒</span><br><span class="line">same &#x3D; n,UserEvent(Test,Note: I am calling now $&#123;DIALSTATUS&#125;.) ;发送UserEvent事件，测试时这一步可以不要。</span><br><span class="line">;播放安装目录下的&#x2F;var&#x2F;lib&#x2F;asterisk&#x2F;sounds&#x2F;en中的hello-world，大概就两秒，很快过去，而且有的手机听不到声音。可以相对路径，可以绝对路径</span><br><span class="line">same &#x3D; n,Playback(hello-world) </span><br><span class="line">same &#x3D; n,Hangup()  ;挂断</span><br><span class="line"></span><br><span class="line">;拨打120响应，日志输出级别ERROR，输出传来的phonenumber参数，按照前文，控制台能看到</span><br><span class="line">exten &#x3D; 120,1,Log(ERROR, $&#123;phonenumber&#125;) </span><br><span class="line">;拨打SIP&#x2F;1001，即sip.conf里的1001账户，15秒内没打通就挂断，一旦接听就跳到sCONNECTED标签处。没配置就只能挂断时才会执行下一步</span><br><span class="line">;Dial应用有很多参数，需要相应的功能可以去官网搜一下</span><br><span class="line">same &#x3D; n,Dial(SIP&#x2F;1001,15,G(sCONNECTED)) </span><br><span class="line">same &#x3D; n,Log(ERROR,aaaaaaaaaa  $&#123;DIALSTATUS&#125;) ;没打通就跳到这里，$&#123;DIALSTATUS&#125;为打电话状态</span><br><span class="line">;使用curl发起http请求，需要按照前文中安装需要的工具才能使用。NoOp命令不做操作。不把curl放在NoOp中，好像没法使用，没摸索出来。</span><br><span class="line">same &#x3D; n,NoOp($&#123;CURL(http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;call&#x2F;api&#x2F;dialstatus.do?dialResult&#x3D;$&#123;DIALSTATUS&#125;)&#125;)</span><br><span class="line">same &#x3D; n,Hangup()  ;挂断，不然会继续往后执行</span><br><span class="line">same &#x3D; n(sCONNECTED),Log(ERROR,bbbbbbbb  $&#123;DIALSTATUS&#125;)</span><br><span class="line">same &#x3D; n,Gotoif($&#123;DIALSTATUS&#125;&#x3D;&#x3D;ANSWER?aANSWER:aEND)  ;根据状态来进行不同的跳转</span><br><span class="line">same &#x3D; n(aEND),Log(ERROR, ccccccccccc  $&#123;DIALSTATUS&#125;)</span><br><span class="line">same &#x3D; n,Hangup()</span><br><span class="line">same &#x3D; n(aANSWER),Log(ERROR, ddddddd  $&#123;DIALSTATUS&#125;)</span><br><span class="line">same &#x3D; n,NoOp($&#123;CURL(http:&#x2F;&#x2F;127.0.0.1:8080&#x2F;call&#x2F;api&#x2F;dialstatus.do?dialResult&#x3D;$&#123;DIALSTATUS&#125;)&#125;)</span><br><span class="line">same &#x3D; n,Hangup()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>按照这样的配置后，可以使用使用手机安装支持sip通话的软件，比如Linphone,Zoiper等等，电脑上也有很多sip软件。进行相应配置后，拨打150，asterisk会充当服务器接听电话。按照extensions.conf中的配置进行执行步骤。你也可以配置多个账户，拨打120，这样asterisk会建立与你的通道，然后再建立与1001账户的通道，两个通道之间就能通话了。</p>
+<h3 id="5、自动拨打电话"><a href="#5、自动拨打电话" class="headerlink" title="5、自动拨打电话"></a>5、自动拨打电话</h3><p>asterisk提供agi、ami、ari三种方式供程序调用，ari我也没用过，agi、amid的java教程如下,其余语言也有对应的教程：<br><a target="_blank" rel="noopener" href="https://asterisk-java.org/tutorial/">示例</a><br>ami使用如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">需要先配置manager.conf</span><br><span class="line">[general]</span><br><span class="line">enabled &#x3D; yes</span><br><span class="line">webenabled &#x3D; yes</span><br><span class="line"></span><br><span class="line">port &#x3D; 5038</span><br><span class="line">bindaddr &#x3D; 0.0.0.0</span><br><span class="line"></span><br><span class="line">[manager]</span><br><span class="line">secret&#x3D;123456</span><br><span class="line">permit&#x3D;0.0.0.0&#x2F;0.0.0.0</span><br><span class="line">read&#x3D;all</span><br><span class="line">write&#x3D;all</span><br><span class="line"></span><br><span class="line">登录：</span><br><span class="line">private static ManagerConnection managerConnection;</span><br><span class="line"></span><br><span class="line">    static &#123;</span><br><span class="line">        if (managerConnection &#x3D;&#x3D; null) &#123;</span><br><span class="line">            ManagerConnectionFactory factory &#x3D; new ManagerConnectionFactory(</span><br><span class="line">                    &quot;127.0.0.1&quot;, &quot;manager&quot;, &quot;123456&quot;);</span><br><span class="line"></span><br><span class="line">            managerConnection &#x3D; factory.createManagerConnection();</span><br><span class="line">            managerConnection.addEventListener(new DialEventListener());&#x2F;&#x2F;增加监听事件</span><br><span class="line">            try &#123;</span><br><span class="line">                managerConnection.login();&#x2F;&#x2F;登录</span><br><span class="line">            &#125; catch (IOException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125; catch (AuthenticationFailedException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125; catch (TimeoutException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>拨打电话：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">OriginateAction originateAction;</span><br><span class="line">        ManagerResponse originateResponse &#x3D; null;</span><br><span class="line"></span><br><span class="line">        originateAction &#x3D; new OriginateAction();</span><br><span class="line">        originateAction.setChannel(&quot;SIP&#x2F;1004&quot;);先建立与SIP&#x2F;1004的通道</span><br><span class="line">        originateAction.setContext(&quot;from-internal&quot;);&#x2F;&#x2F;上下文</span><br><span class="line">        originateAction.setExten(&quot;130&quot;);&#x2F;&#x2F;拨打130。需要SIP&#x2F;1004接通才进行拨打</span><br><span class="line">        originateAction.setPriority(1);&#x2F;&#x2F;从1开始</span><br><span class="line">        originateAction.setAsync(false); </span><br><span class="line">        originateAction.setTimeout(30000l);</span><br><span class="line">        originateAction.setVariable(&quot;phonenumber&quot;,&quot;123344444&quot;);</span><br><span class="line">        try &#123;</span><br><span class="line">            &#x2F;&#x2F;managerConnection.login();</span><br><span class="line">            originateResponse &#x3D; managerConnection.sendAction(originateAction, 3000);</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">            response.getWriter().write();</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">           &#x2F;&#x2F; managerConnection.logoff();登出</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+<p>监听：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">public class DialEventListener implements ManagerEventListener &#123; &#x2F;&#x2F;继承该接口</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void onManagerEvent(ManagerEvent event) &#123;</span><br><span class="line">        System.out.println(event);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>由于每次拨打电话时，都要先建立与SIP/1004的通道，即需要该用户手动接通电话，才会执行extension.conf里的配置，所以不能完全自动化，可以安装以下包来实现自动接听:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">libre</span><br><span class="line">librem</span><br><span class="line">openssl</span><br><span class="line">然后再安装baresip(基于以上三个包),github上均有，按照上面对应的方法进行安装即可</span><br></pre></td></tr></table></figure>
+<p>安装后进入你自己的主文件夹里会有.baresip目录，进入后编辑accounts文件，配置账户：<br><code>&lt;sip:1004:123@127.0.0.1;transport=udp&gt;;answermode=auto  #协议:账号:密码@ip地址</code><br>这跟在前面用手机软件配置账户是一样的，不过它多了一个自动接通的功能，不用手动去接通。</p>
+<p>ps：官方英文文档虽然难懂，却是入门的的途径；用英文进行谷歌搜索的结果真的比中文好。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Asterisk/" rel="tag"># Asterisk</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/05/15/java-Date/" rel="prev" title="Java之Date类">
+      <i class="fa fa-chevron-left"></i> Java之Date类
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/08/07/Log4J2/" rel="next" title="slf4j+Log4J2基础配置">
+      slf4j+Log4J2基础配置 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E7%AE%80%E4%BB%8B"><span class="nav-number">1.</span> <span class="nav-text">1、简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E5%AE%89%E8%A3%85"><span class="nav-number">2.</span> <span class="nav-text">2、安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%E3%80%81%E5%9F%BA%E7%A1%80%E5%91%BD%E4%BB%A4"><span class="nav-number">3.</span> <span class="nav-text">3、基础命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4%E3%80%81%E5%9F%BA%E7%A1%80%E9%85%8D%E7%BD%AE"><span class="nav-number">4.</span> <span class="nav-text">4、基础配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5%E3%80%81%E8%87%AA%E5%8A%A8%E6%8B%A8%E6%89%93%E7%94%B5%E8%AF%9D"><span class="nav-number">5.</span> <span class="nav-text">5、自动拨打电话</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zj</p>
+  <div class="site-description" itemprop="description">学了忘、忘了查、查了懵逼、懵逼了学。故有此博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">75</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zj</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

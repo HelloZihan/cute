@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zhaojun.me","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Log4J2基础配置">
+<meta property="og:type" content="article">
+<meta property="og:title" content="slf4j+Log4J2基础配置">
+<meta property="og:url" content="http://zhaojun.me/2017/08/07/Log4J2/index.html">
+<meta property="og:site_name" content="记录">
+<meta property="og:description" content="Log4J2基础配置">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2017-08-07T09:39:14.000Z">
+<meta property="article:modified_time" content="2017-08-18T14:36:01.000Z">
+<meta property="article:author" content="zj">
+<meta property="article:tag" content="日志">
+<meta property="article:tag" content="Log4J2">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://zhaojun.me/2017/08/07/Log4J2/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>slf4j+Log4J2基础配置 | 记录</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="记录" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">记录</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">我本可以</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://zhaojun.me/2017/08/07/Log4J2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zj">
+      <meta itemprop="description" content="学了忘、忘了查、查了懵逼、懵逼了学。故有此博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          slf4j+Log4J2基础配置
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-08-07 17:39:14" itemprop="dateCreated datePublished" datetime="2017-08-07T17:39:14+08:00">2017-08-07</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2017-08-18 22:36:01" itemprop="dateModified" datetime="2017-08-18T22:36:01+08:00">2017-08-18</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%97%A5%E5%BF%97/" itemprop="url" rel="index"><span itemprop="name">日志</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">Log4J2基础配置</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="1、slf4j简介："><a href="#1、slf4j简介：" class="headerlink" title="1、slf4j简介："></a>1、slf4j简介：</h3><p>slf4j是一种通用的“接口”，各种日志框架实现该接口，类似于jdbc的形式。有了这个统一的接口，日志实现框架切换起来就很方便，也就是解耦。</p>
+<h3 id="2、maven依赖"><a href="#2、maven依赖" class="headerlink" title="2、maven依赖"></a>2、maven依赖</h3><p>java中使用slf4j+Log4J2需要引入以下两个依赖：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.apache.logging.log4j&lt;&#x2F;groupId&gt;  &#x2F;&#x2F;接口</span><br><span class="line">    &lt;artifactId&gt;log4j-slf4j-impl&lt;&#x2F;artifactId&gt;</span><br><span class="line">    &lt;version&gt;2.7&lt;&#x2F;version&gt;</span><br><span class="line">&lt;&#x2F;dependency&gt;</span><br><span class="line"></span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.apache.logging.log4j&lt;&#x2F;groupId&gt;   &#x2F;&#x2F;核心实现</span><br><span class="line">    &lt;artifactId&gt;log4j-core&lt;&#x2F;artifactId&gt;</span><br><span class="line">    &lt;version&gt;2.7&lt;&#x2F;version&gt;</span><br><span class="line">&lt;&#x2F;dependency&gt;</span><br><span class="line">&#x2F;&#x2F;当你需要切换日志框架时，直接切换jar就行了，当然你的代码应该使用slf4j所提供的通用的接口方法</span><br></pre></td></tr></table></figure>
+<h3 id="3、Log4J2基础"><a href="#3、Log4J2基础" class="headerlink" title="3、Log4J2基础"></a>3、Log4J2基础</h3><p>Log4j 2的配置可以通过以下4种方式之一完成：</p>
+<ul>
+<li>通过使用XML，JSON，YAML或属性格式编写的配置文件。</li>
+<li>以编程方式，通过创建一个ConfigurationFactory和配置实现。</li>
+<li>以编程方式，通过调用配置界面中公开的API将组件添加到默认配置。</li>
+<li>通过编程方式，通过调用内部Logger类的方法。</li>
+</ul>
+<p>Log4j将检查“log4j.configurationFile”系统属性，如果设置，将尝试使用与文件扩展名匹配的ConfigurationFactory加载配置。web项目可以在web.xml中设置Log4J2配置文件的位置，没有设置就默认要在根路劲下</p>
+<ul>
+<li>如果没有设置系统属性，则属性ConfigurationFactory将在类路径中查找log4j2-test.properties。</li>
+<li>如果没有找到这样的文件，YAML ConfigurationFactory将在类路径中查找log4j2-test.yaml或log4j2-test.yml。</li>
+<li>如果没有找到这样的文件，JSON ConfigurationFactory将在类路径中查找log4j2-test.json或log4j2-test.jsn。</li>
+<li>如果没有找到这样的文件，XML ConfigurationFactory将在类路径中查找log4j2-test.xml。</li>
+<li>如果找不到测试文件，则属性ConfigurationFactory将在类路径中查找log4j2.properties。</li>
+<li>如果无法找到属性文件，则YAML ConfigurationFactory将在类路径上查找log4j2.yaml或log4j2.yml。</li>
+<li>如果无法找到YAML文件，则JSON ConfigurationFactory将在类路径上查找log4j2.json或log4j2.jsn。</li>
+<li>如果无法找到JSON文件，则XML ConfigurationFactory将尝试在类路径上找到log4j2.xml。</li>
+<li>如果没有找到配置文件，将使用DefaultConfiguration。这将导致日志输出转到控制台。</li>
+</ul>
+<p>如果没有配置任何配置文件，默认配置如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version&#x3D;&quot;1.0&quot; encoding&#x3D;&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;Configuration status&#x3D;&quot;WARN&quot;&gt;</span><br><span class="line">  &lt;Appenders&gt;</span><br><span class="line">    &lt;Console name&#x3D;&quot;Console&quot; target&#x3D;&quot;SYSTEM_OUT&quot;&gt; &#x2F;&#x2F;直接控制台输出</span><br><span class="line">      &lt;PatternLayout pattern&#x3D;&quot;%d&#123;HH:mm:ss.SSS&#125; [%t] %-5level %logger&#123;36&#125; - %msg%n&quot;&#x2F;&gt;</span><br><span class="line">    &lt;&#x2F;Console&gt;</span><br><span class="line">  &lt;&#x2F;Appenders&gt;</span><br><span class="line">  &lt;Loggers&gt;</span><br><span class="line">    &lt;Root level&#x3D;&quot;error&quot;&gt;  &#x2F;&#x2F;默认级别为error</span><br><span class="line">      &lt;AppenderRef ref&#x3D;&quot;Console&quot;&#x2F;&gt; &#x2F;&#x2F;指向Appenders中的console</span><br><span class="line">    &lt;&#x2F;Root&gt;</span><br><span class="line">  &lt;&#x2F;Loggers&gt;</span><br><span class="line">&lt;&#x2F;Configuration&gt;</span><br></pre></td></tr></table></figure>
+<p>详细的配置可以去官网看：<a target="_blank" rel="noopener" href="http://logging.apache.org/log4j/2.x/manual/configuration.html">详细配置</a></p>
+<h3 id="4、示例"><a href="#4、示例" class="headerlink" title="4、示例"></a>4、示例</h3><p>java调用代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public class Log4jTest &#123;</span><br><span class="line"></span><br><span class="line">    &#x2F;&#x2F;LoggerFactory为slf4j类里的方法，获取org.slf4j.Logger接口在Log4J2中的实现</span><br><span class="line">    private static Logger logger &#x3D; LoggerFactory.getLogger(Log4jTest.class);</span><br><span class="line"></span><br><span class="line">    public static void main(final String... args) &#123;</span><br><span class="line">        logger.trace(&quot;trace&quot;);&#x2F;&#x2F;trace是Log4J2新增的级别，低于debug级别</span><br><span class="line">        logger.error(&quot;error&quot;);</span><br><span class="line">         &#x2F;&#x2F;将参数2替代&#123;&#125;进行输出，是使用slf4j+Log4J2的优势之一</span><br><span class="line">        logger.error(&quot;Exiting application.&#123;&#125;&quot; , 2);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>常用配置示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version&#x3D;&quot;1.0&quot; encoding&#x3D;&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;Configuration&gt;</span><br><span class="line">    &lt;Appenders&gt;&lt;!-- 配置输出地点 --&gt;</span><br><span class="line">        &lt;!-- fileName输出路径，绝对路径 --&gt;</span><br><span class="line">        &lt;!-- 初始日志名称是error.log，一天之后，将rolling.log修改为error-日期.log并压缩为error-日期.log.gz(如error-20170806.log.gz，2017年8月6号)，rolling.log重新开始写； --&gt;</span><br><span class="line">        &lt;RollingFile name&#x3D;&quot;error-appender&quot; fileName&#x3D;&quot;&#x2F;home&#x2F;ubuntu&#x2F;data&#x2F;log&#x2F;installment&#x2F;error.log&quot; filePattern&#x3D;&quot;&#x2F;home&#x2F;ubuntu&#x2F;data&#x2F;log&#x2F;installment&#x2F;error-%d&#123;yyyyMMdd&#125;.log.gz&quot;&gt;</span><br><span class="line">            &lt;PatternLayout&gt;</span><br><span class="line">                &lt;Pattern&gt;%d&#123;MMdd HH:mm:ss.SSS&#125; %-5p [%c][%t] %m%n&lt;&#x2F;Pattern&gt;</span><br><span class="line">            &lt;&#x2F;PatternLayout&gt;</span><br><span class="line">            &lt;!-- 上面的filePattern后的日期格式，以及TimeBasedTriggeringPolicy的interval，日期格式精确到哪一位，interval也精确到哪一个单位 --&gt;</span><br><span class="line">            &lt;Policies&gt;</span><br><span class="line">                &lt;!-- 每天一次，即上面重写并压缩日志的频率，如果要根据文件大小来压缩使用SizeBasedTriggeringPolicy属性。modulate为true代表从始终0点开始计时--&gt;</span><br><span class="line">                &lt;TimeBasedTriggeringPolicy interval&#x3D;&quot;1&quot; modulate&#x3D;&quot;true&quot;&#x2F;&gt;</span><br><span class="line">            &lt;&#x2F;Policies&gt;</span><br><span class="line">        &lt;&#x2F;RollingFile&gt;</span><br><span class="line">        &lt;RollingFile name&#x3D;&quot;debug-appender&quot; fileName&#x3D;&quot;&#x2F;home&#x2F;ubuntu&#x2F;data&#x2F;log&#x2F;installment&#x2F;debug.log&quot; filePattern&#x3D;&quot;&#x2F;home&#x2F;ubuntu&#x2F;data&#x2F;log&#x2F;installment&#x2F;debug-%d&#123;yyyyMMdd&#125;.log.gz&quot;&gt;</span><br><span class="line">            &lt;PatternLayout&gt;</span><br><span class="line">                &lt;Pattern&gt;%d&#123;MMdd HH:mm:ss.SSS&#125; %-5p [%c][%t] %m%n&lt;&#x2F;Pattern&gt;&lt;!-- 定义日志输出的样式--&gt;</span><br><span class="line">            &lt;&#x2F;PatternLayout&gt;</span><br><span class="line">            &lt;Policies&gt;</span><br><span class="line">                &lt;TimeBasedTriggeringPolicy interval&#x3D;&quot;1&quot; modulate&#x3D;&quot;true&quot;&#x2F;&gt;</span><br><span class="line">            &lt;&#x2F;Policies&gt;</span><br><span class="line">            &lt;!-- Filters代表过滤掉传来的日志  --&gt;</span><br><span class="line">            &lt;Filters&gt;</span><br><span class="line">                &lt;ThresholdFilter level&#x3D;&quot;warn&quot; onMatch&#x3D;&quot;DENY&quot; onMismatch&#x3D;&quot;NEUTRAL&quot;&#x2F;&gt;</span><br><span class="line">            &lt;&#x2F;Filters&gt;</span><br><span class="line">        &lt;&#x2F;RollingFile&gt;</span><br><span class="line">    </span><br><span class="line">        &lt;RollingFile name&#x3D;&quot;request-appender&quot; fileName&#x3D;&quot;&#x2F;home&#x2F;ubuntu&#x2F;data&#x2F;log&#x2F;installment&#x2F;request.log&quot; filePattern&#x3D;&quot;&#x2F;home&#x2F;ubuntu&#x2F;data&#x2F;log&#x2F;installment&#x2F;request-%d&#123;yyyyMMdd&#125;.log.gz&quot;&gt;</span><br><span class="line">            &lt;PatternLayout&gt;</span><br><span class="line">                &lt;Pattern&gt;%d&#123;MMdd HH:mm:ss.SSS&#125; %m%n&lt;&#x2F;Pattern&gt;</span><br><span class="line">            &lt;&#x2F;PatternLayout&gt;</span><br><span class="line">            &lt;Policies&gt;</span><br><span class="line">                &lt;TimeBasedTriggeringPolicy interval&#x3D;&quot;1&quot; modulate&#x3D;&quot;true&quot;&#x2F;&gt;</span><br><span class="line">            &lt;&#x2F;Policies&gt;</span><br><span class="line">        &lt;&#x2F;RollingFile&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- 发送到邮箱，基于smtp协议 --&gt;</span><br><span class="line">        &lt;SMTP name&#x3D;&quot;Mailer&quot; subject&#x3D;&quot;testErrorLog&quot; to&#x3D;&quot;zhaojun@qq.com, zhaojun@163.com from&#x3D;&quot;no-reply@qq.com&quot; smtpHost&#x3D;&quot;localhost&quot; smtpProtocol&#x3D;&quot;smtp&quot; smtpUsername&#x3D;&quot;anonymous&quot; smtpPassword&#x3D;&quot;anonymous&quot;  smtpPort&#x3D;&quot;25&quot; ignoreExceptions&#x3D;&quot;false&quot;&gt;</span><br><span class="line">            &lt;PatternLayout&gt;</span><br><span class="line">                &lt;Pattern&gt;%m%n%d&#123;MMdd HH:mm:ss.SSS&#125; %-5p [%c][%t]&lt;&#x2F;Pattern&gt;</span><br><span class="line">            &lt;&#x2F;PatternLayout&gt;</span><br><span class="line">        &lt;&#x2F;SMTP&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!-- FailoverAppender　维护一个队列，系统将尝试向队列中的Appender依次输出LogEvent，直到有一个成功为止，这里向邮箱发送邮件，如果发送失败，就再发 --&gt;</span><br><span class="line">        &lt;Failover name&#x3D;&quot;Failover&quot; primary&#x3D;&quot;Mailer&quot;&gt;</span><br><span class="line">            &lt;Failovers&gt;</span><br><span class="line">                &lt;AppenderRef ref&#x3D;&quot;Mailer&quot;&#x2F;&gt;</span><br><span class="line">            &lt;&#x2F;Failovers&gt;</span><br><span class="line">        &lt;&#x2F;Failover&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!--&lt;Raven name&#x3D;&quot;Sentry&quot;&gt;  Sentry使用，需要引入新的jar包</span><br><span class="line">            &lt;dsn&gt;&lt;&#x2F;dsn&gt;</span><br><span class="line">            &lt;environment&gt;&lt;&#x2F;environment&gt;</span><br><span class="line">            &lt;servername&gt;&lt;&#x2F;servername&gt;</span><br><span class="line">        &lt;&#x2F;Raven&gt;--&gt;</span><br><span class="line"></span><br><span class="line">    &lt;&#x2F;Appenders&gt;&lt;!--  除了RollingFileAppender、SMTPAppender、FailoverAppender，还有许多其他的Appender，见上述官网配置链接--&gt;</span><br><span class="line"></span><br><span class="line">    &lt;Loggers&gt;</span><br><span class="line">        &lt;!--AsyncLogger中的level代表输出的日志的级别，大于等于才能输出。仅对com.test包下的类有效。additivity为false表示不继承父类，否则会输出两次一样的日志，includeLocation包含类的位置--&gt;</span><br><span class="line">        &lt;AsyncLogger name&#x3D;&quot;com.test&quot; additivity&#x3D;&quot;false&quot; level&#x3D;&quot;DEBUG&quot; includeLocation&#x3D;&quot;true&quot;&gt;</span><br><span class="line">            &lt;appenderRef ref&#x3D;&quot;debug-appender&quot; level&#x3D;&quot;debug&quot;&#x2F;&gt;&lt;!--大于等于debug的调用debug-appender输出--&gt;</span><br><span class="line">            &lt;AppenderRef ref&#x3D;&quot;error-appender&quot; level&#x3D;&quot;error&quot;&#x2F;&gt;&lt;!--大于等于error的调用error-appender输出--&gt;</span><br><span class="line">            &lt;AppenderRef ref&#x3D;&quot;Sentry&quot; level&#x3D;&quot;error&quot;&#x2F;&gt;&lt;!--大于等于error的调用Sentry输出--&gt;</span><br><span class="line">        &lt;&#x2F;AsyncLogger&gt;</span><br><span class="line"></span><br><span class="line">        &lt;!--request请求输出--&gt;</span><br><span class="line">        &lt;AsyncLogger name&#x3D;&quot;request&quot; additivity&#x3D;&quot;false&quot; level&#x3D;&quot;info&quot; includeLocation&#x3D;&quot;true&quot;&gt;</span><br><span class="line">            &lt;appenderRef ref&#x3D;&quot;request-appender&quot;&#x2F;&gt;</span><br><span class="line">        &lt;&#x2F;AsyncLogger&gt;</span><br><span class="line">    &lt;&#x2F;Loggers&gt;</span><br><span class="line">&lt;&#x2F;Configuration&gt;                                                                                                                                                                                     </span><br></pre></td></tr></table></figure>
+<p>其中，使用AsyncLogger异步logger需要引入新的jar包：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> &lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;com.lmax&lt;&#x2F;groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;disruptor&lt;&#x2F;artifactId&gt;</span><br><span class="line">    &lt;version&gt;3.3.2&lt;&#x2F;version&gt;</span><br><span class="line">&lt;&#x2F;dependency&gt;</span><br></pre></td></tr></table></figure>
+<p>另外在以上配置中，Filters即过滤器，决定日志事件能否被输出。过滤条件有三个值：ACCEPT(接受), DENY(拒绝) or NEUTRAL(中立).</p>
+<p>在使用单个过滤器的时候，一般直接使用ACCEPT或DENY。但是在组合过滤器中，如果用接受ACCEPT的话，日志信息就会直接写入日志文件,后续的过滤器不再进行过滤。所以，在组合过滤器中，接受使用NEUTRAL（中立），被第一个过滤器接受的日志信息，会继续用后面的过滤器进行过滤，只有符合所有过滤器条件的日志信息，才会被最终写入日志文件。</p>
+<p>ThresholdFilter有几个参数：</p>
+<ul>
+<li>level：将被过滤的级别。</li>
+<li>onMatch:默认值是NEUTRAL</li>
+<li>onMismatch：默认是DENY</li>
+</ul>
+<p>如果LogEvent中的LogLevel大于ThresholdFilter中配置的LogLevel，那么返回onMatch的值，否则返回onMismatch的值，例如:如果ThresholdFilter配置的LogLevel是ERROR，LogEvent的LogLevel是DEBUG。那么onMismatch的值将被返回，因为ERROR小于DEBUG。如果是Accept，将自己被接受，而不经过下一个过滤器。</p>
+<p>下面的例子可以这样理解：如果是INFO级别及其以上，将经过通过第一个过滤，进入第二个，否则使用onMismatch：拒绝进入。对于第二个，如果是大于等于WARN(WARN/ERROR)，那么将返回onMatch，也就是拒绝，如果是其他情况(也就是INFO)，将是中立情况，因为后面没有其他过滤器，则被接受。最后的结果就只剩下INFO级别的日志。也就符合了RollingFileInfo只记录Info级别的规则。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;RollingFile name&#x3D;&quot;RollingFileInfo&quot; fileName&#x3D;&quot;&quot; filePattern&#x3D;&quot;&quot;&gt;</span><br><span class="line">    &lt;!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）--&gt;        </span><br><span class="line">    &lt;Filters&gt;</span><br><span class="line">        &lt;ThresholdFilter level&#x3D;&quot;INFO&quot;&#x2F;&gt;</span><br><span class="line">        &lt;ThresholdFilter level&#x3D;&quot;WARN&quot; onMatch&#x3D;&quot;DENY&quot; onMismatch&#x3D;&quot;NEUTRAL&quot;&#x2F;&gt;</span><br><span class="line">    &lt;&#x2F;Filters&gt;</span><br><span class="line">    &lt;PatternLayout pattern&#x3D;&quot;[%d&#123;HH:mm:ss:SSS&#125;] [%p] - %l - %m%n&quot;&#x2F;&gt;</span><br><span class="line">&lt;&#x2F;RollingFile&gt;</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%97%A5%E5%BF%97/" rel="tag"># 日志</a>
+              <a href="/tags/Log4J2/" rel="tag"># Log4J2</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/08/04/Asterisk/" rel="prev" title="Asterisk">
+      <i class="fa fa-chevron-left"></i> Asterisk
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/08/18/InnoDB-lock/" rel="next" title="InnoDB引擎下的锁模式">
+      InnoDB引擎下的锁模式 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81slf4j%E7%AE%80%E4%BB%8B%EF%BC%9A"><span class="nav-number">1.</span> <span class="nav-text">1、slf4j简介：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81maven%E4%BE%9D%E8%B5%96"><span class="nav-number">2.</span> <span class="nav-text">2、maven依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%E3%80%81Log4J2%E5%9F%BA%E7%A1%80"><span class="nav-number">3.</span> <span class="nav-text">3、Log4J2基础</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4%E3%80%81%E7%A4%BA%E4%BE%8B"><span class="nav-number">4.</span> <span class="nav-text">4、示例</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zj</p>
+  <div class="site-description" itemprop="description">学了忘、忘了查、查了懵逼、懵逼了学。故有此博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">75</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zj</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

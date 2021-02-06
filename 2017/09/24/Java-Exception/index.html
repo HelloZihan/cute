@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zhaojun.me","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="异常情形是指阻止当前方法或作用域继续执行的问题。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java异常">
+<meta property="og:url" content="http://zhaojun.me/2017/09/24/Java-Exception/index.html">
+<meta property="og:site_name" content="记录">
+<meta property="og:description" content="异常情形是指阻止当前方法或作用域继续执行的问题。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://zhaojun.me/2017/09/24/Java-Exception/a.jpeg">
+<meta property="article:published_time" content="2017-09-24T05:18:49.000Z">
+<meta property="article:modified_time" content="2017-10-31T15:34:22.000Z">
+<meta property="article:author" content="zj">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="异常">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://zhaojun.me/2017/09/24/Java-Exception/a.jpeg">
+
+<link rel="canonical" href="http://zhaojun.me/2017/09/24/Java-Exception/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Java异常 | 记录</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="记录" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">记录</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">我本可以</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://zhaojun.me/2017/09/24/Java-Exception/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zj">
+      <meta itemprop="description" content="学了忘、忘了查、查了懵逼、懵逼了学。故有此博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Java异常
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-09-24 13:18:49" itemprop="dateCreated datePublished" datetime="2017-09-24T13:18:49+08:00">2017-09-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2017-10-31 23:34:22" itemprop="dateModified" datetime="2017-10-31T23:34:22+08:00">2017-10-31</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">异常情形是指阻止当前方法或作用域继续执行的问题。</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="1、概念"><a href="#1、概念" class="headerlink" title="1、概念"></a>1、概念</h3><p>异常情形是指阻止当前方法或作用域继续执行的问题。把异常情形和普通问题区分开来很重要，所谓普通问题是指，在当前环境下能得到足够的信息，总能处理这个错误。而对于异常情形，就不能继续下去了，因为在当前环境下无法获得必要的信息来解决问题</p>
+<p>当抛出异常后，有几件事会随之发生。首先，同Java其他对象的创建一样，将使用new在堆上创建对异常对象的引用。然后，当前的执行路径被终止，并且从当前的环境中弹出对异常对象的引用。此时异常处理机制接管程序，并开始寻找一个恰当的地方来继续执行程序。这个恰当的地方救市异常处理程序，它的任务就是将程序从错误的状态中恢复，以使程序能要么换一种方式执行，要么继续运行下去。</p>
+<h3 id="2、异常的类型"><a href="#2、异常的类型" class="headerlink" title="2、异常的类型"></a>2、异常的类型</h3><p>异常主要分为以下几种类型，只有Exception下得非RuntimeException需要我们在方法上声明throws异常或者使用try／catch进行处理。当然也可以使用throws声明异常，但是不抛出异常。这样的好处是为异常先占个位置，以后就可以抛出异常而不用修改已有的代码。在定义抽象基类和接口时这种能力极为重要。</p>
+<img src="/2017/09/24/Java-Exception/a.jpeg" class="" title="图2-1">  
+
+
+<h3 id="3、捕获异常"><a href="#3、捕获异常" class="headerlink" title="3、捕获异常"></a>3、捕获异常</h3><h4 id="3-1、常用方法"><a href="#3-1、常用方法" class="headerlink" title="3.1、常用方法"></a>3.1、常用方法</h4><p>Exception类很简洁，我们可以使用它从Throwable继承的方法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">String getMessage()  &#x2F;&#x2F;获取异常信息</span><br><span class="line">String getLocalizedMessage() &#x2F;&#x2F;用本地语言表示的异常信息</span><br><span class="line"></span><br><span class="line">String toString()  &#x2F;&#x2F;返回对Throwable的简单描述，要是有详细信息的话，也会把它包含在内</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;打印Throwable和Throwable的调用栈轨迹。调用栈显示了“把你带到异常抛出地点的方法调用轨迹”</span><br><span class="line">void printStackTrace()    &#x2F;&#x2F;输出到标准错误</span><br><span class="line">void printStackTrace(PrintStream)   &#x2F;&#x2F;输出到特定控制流</span><br><span class="line">void printStackTrace(java.io.PrintWriter)  &#x2F;&#x2F;同上</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Throwable fillStackTrace()  &#x2F;&#x2F;用于在Throwable对象的内部记录栈帧的当前状态。这在重新抛出错误或异常时很有用</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">public class ExceptionsMethods &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            throw new Exception(&quot;My Exception&quot;);</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            System.out.println(&quot;getMessage():&quot; + e.getMessage());</span><br><span class="line">            System.out.println(&quot;getLocalizedMessage():&quot; + e.getLocalizedMessage());</span><br><span class="line">            System.out.println(&quot;toString():&quot; + e.toString());</span><br><span class="line">            System.out.println(&quot;printStackTrace():&quot; );</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;&#x2F;&#x2F;output:</span><br><span class="line">getMessage():My Exception</span><br><span class="line">getLocalizedMessage():My Exception</span><br><span class="line">toString():java.lang.Exception: My Exception</span><br><span class="line">printStackTrace():</span><br><span class="line">java.lang.Exception: My Exception</span><br><span class="line">	at com.web.tree.test.ExceptionsMethods.main(ExceptionsMethods.java:9)</span><br><span class="line">	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)</span><br><span class="line">	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)</span><br><span class="line">	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)</span><br><span class="line">	at java.lang.reflect.Method.invoke(Method.java:498)</span><br><span class="line">	at com.intellij.rt.execution.application.AppMain.main(AppMain.java:147)</span><br></pre></td></tr></table></figure>
+<p>可以发现每个方法都比前一个提供更多的信息，实际上每一个都是前一个的超集。</p>
+<h4 id="3-2、栈轨迹"><a href="#3-2、栈轨迹" class="headerlink" title="3.2、栈轨迹"></a>3.2、栈轨迹</h4><p>printStackTrace()方法所提供的信息可以使用getStackTrace()方法来直接访问，这个方法将返回一个由栈轨迹中元素所构成的数组，其中每个元素都表示栈的一帧。元素0是栈顶元素，并且是最后调用序列的最后一个方法调用，也就是异常抛出之处，如下列的f；数组的最后一个元素和栈底是调用序列的第一个方法调用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">public class WhoCalled &#123;</span><br><span class="line">    static void f() &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            throw new Exception();</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            for (StackTraceElement ste : e.getStackTrace()) &#123;</span><br><span class="line">                System.out.println(ste.getMethodName());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        f();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;&#x2F;&#x2F;output:</span><br><span class="line">f</span><br><span class="line">main</span><br><span class="line">invoke0</span><br><span class="line">invoke</span><br><span class="line">invoke</span><br><span class="line">invoke</span><br><span class="line">main</span><br></pre></td></tr></table></figure>
+<p>这里只打印了方法名，实际上可以打印整个StackTraceElement，它包含了其他附件信息。</p>
+<h4 id="3-3、重新抛出异常"><a href="#3-3、重新抛出异常" class="headerlink" title="3.3、重新抛出异常"></a>3.3、重新抛出异常</h4><p>有时候希望把捕获的异常重新抛出，如果已经捕获了当前异常的引用，那么直接抛出即可：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">catch(Exception e) &#123;</span><br><span class="line">    System.out.println(&quot;An exception was thrown&quot;);</span><br><span class="line">    throw e;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>重新抛出异常会把异常抛给上一级环境中的异常处理程序，同一个try块后续的catch将会被忽略。此外，异常对象的所有信息都得以保持，所以高一级的环境中捕获此异常的处理程序可以从这个异常对象中得到所有信息。</p>
+<p>如果只是将当前异常对象重新抛出，那么使用printStackTrace方法就可以。要想更新这个信息，可以调用fillInStackTrace方法，这会返回一个Throwable对象，它通过将当前调用栈的信息填入原来那个异常对象而建立的，例如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line">public class Rethrowing &#123;</span><br><span class="line">    public static void f() throws Exception &#123;</span><br><span class="line">        System.out.println(&quot;Exception in f()&quot;);</span><br><span class="line">        throw new Exception(&quot;throw from f()&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void g() throws Exception &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            f();</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            System.out.println(&quot;Inside g()&quot;);</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">            throw e;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void h() throws Exception &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            f();</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            System.out.println(&quot;Inside h()&quot;);</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">            throw (Exception) e.fillInStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            g();</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            System.out.println(&quot;main:&quot;);</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(&quot;-------------------&quot;);</span><br><span class="line">        try &#123;</span><br><span class="line">            h();</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            System.out.println(&quot;main:&quot;);</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">&#x2F;*</span><br><span class="line">Exception in f()</span><br><span class="line">Inside g()</span><br><span class="line">java.lang.Exception: throw from f()</span><br><span class="line">	at com.web.tree.test.Rethrowing.f(Rethrowing.java:9)</span><br><span class="line">	at com.web.tree.test.Rethrowing.g(Rethrowing.java:14)</span><br><span class="line">	at com.web.tree.test.Rethrowing.main(Rethrowing.java:33)</span><br><span class="line">main:</span><br><span class="line">java.lang.Exception: throw from f()</span><br><span class="line">	at com.web.tree.test.Rethrowing.f(Rethrowing.java:9)</span><br><span class="line">	at com.web.tree.test.Rethrowing.g(Rethrowing.java:14)</span><br><span class="line">	at com.web.tree.test.Rethrowing.main(Rethrowing.java:33)</span><br><span class="line">-------------------</span><br><span class="line">Exception in f()</span><br><span class="line">Inside h()</span><br><span class="line">main:</span><br><span class="line">java.lang.Exception: throw from f()</span><br><span class="line">	at com.web.tree.test.Rethrowing.f(Rethrowing.java:9)</span><br><span class="line">	at com.web.tree.test.Rethrowing.h(Rethrowing.java:24)</span><br><span class="line">	at com.web.tree.test.Rethrowing.main(Rethrowing.java:40)</span><br><span class="line">java.lang.Exception: throw from f()</span><br><span class="line">	at com.web.tree.test.Rethrowing.h(Rethrowing.java:28)&#x2F;&#x2F;这里重新定义了抛出地点，没有原来的抛出信息</span><br><span class="line">	at com.web.tree.test.Rethrowing.main(Rethrowing.java:40)</span><br><span class="line">*&#x2F;</span><br></pre></td></tr></table></figure>
+<p>调用fillInStackTrace成为了新的异常发生地。有可能在捕获之后抛出另外一种异常，这么做有点类似于fillInStackTrace，有关原来发生的异常信息发生点会丢失，剩下的是与新抛出的地点有关的信息。另外，不必为清理前一个异常对象而担心，或者说为异常对象的清理而担心。它们都是在堆上用new创建的对象，所以垃圾回收器会自动把它清理掉。</p>
+<h4 id="3-4、异常链"><a href="#3-4、异常链" class="headerlink" title="3.4、异常链"></a>3.4、异常链</h4><p>常常需要在捕获一个异常后想要抛出另外一个异常，并且希望保存原来的异常信息，这被成为异常链。可以使用Throwable子类构造器参数为cause对象为参数，这个cause就用来表示原有异常，这样就通过把原始异常传递给新的异常。</p>
+<p>但是在Throwable子类中，只有三种基本异常类提供了待cause参数的构造器，分别是Error，RuntimeException，Exception。如果要把其他类型的异常连接起来，应该使用initCause（）方法而不是构造器。</p>
+<h3 id="4、异常的限制"><a href="#4、异常的限制" class="headerlink" title="4、异常的限制"></a>4、异常的限制</h3><p>当覆盖方法的时候，只能抛出在基类方法的异常说明里列出的那些异常。这个限制很有用，当基类使用的代码应用到其派生类对象的时候，一样能工作。</p>
+<p>参考自《Java编程思想》</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"># Java</a>
+              <a href="/tags/%E5%BC%82%E5%B8%B8/" rel="tag"># 异常</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/09/24/zookeeper1/" rel="prev" title="zookeeper1">
+      <i class="fa fa-chevron-left"></i> zookeeper1
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/10/17/JVM-memory-model/" rel="next" title="Java内存模型与线程">
+      Java内存模型与线程 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E6%A6%82%E5%BF%B5"><span class="nav-number">1.</span> <span class="nav-text">1、概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E5%BC%82%E5%B8%B8%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="nav-number">2.</span> <span class="nav-text">2、异常的类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%E3%80%81%E6%8D%95%E8%8E%B7%E5%BC%82%E5%B8%B8"><span class="nav-number">3.</span> <span class="nav-text">3、捕获异常</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1%E3%80%81%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95"><span class="nav-number">3.1.</span> <span class="nav-text">3.1、常用方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2%E3%80%81%E6%A0%88%E8%BD%A8%E8%BF%B9"><span class="nav-number">3.2.</span> <span class="nav-text">3.2、栈轨迹</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-3%E3%80%81%E9%87%8D%E6%96%B0%E6%8A%9B%E5%87%BA%E5%BC%82%E5%B8%B8"><span class="nav-number">3.3.</span> <span class="nav-text">3.3、重新抛出异常</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-4%E3%80%81%E5%BC%82%E5%B8%B8%E9%93%BE"><span class="nav-number">3.4.</span> <span class="nav-text">3.4、异常链</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4%E3%80%81%E5%BC%82%E5%B8%B8%E7%9A%84%E9%99%90%E5%88%B6"><span class="nav-number">4.</span> <span class="nav-text">4、异常的限制</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zj</p>
+  <div class="site-description" itemprop="description">学了忘、忘了查、查了懵逼、懵逼了学。故有此博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">75</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zj</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

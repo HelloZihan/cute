@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"zhaojun.me","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="理解Java中多线程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java内存模型与线程">
+<meta property="og:url" content="http://zhaojun.me/2017/10/17/JVM-memory-model/index.html">
+<meta property="og:site_name" content="记录">
+<meta property="og:description" content="理解Java中多线程">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://zhaojun.me/2017/10/17/JVM-memory-model/a.jpeg">
+<meta property="og:image" content="http://zhaojun.me/2017/10/17/JVM-memory-model/b.jpeg">
+<meta property="article:published_time" content="2017-10-17T03:52:59.000Z">
+<meta property="article:modified_time" content="2017-10-23T15:26:46.000Z">
+<meta property="article:author" content="zj">
+<meta property="article:tag" content="Jvm">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://zhaojun.me/2017/10/17/JVM-memory-model/a.jpeg">
+
+<link rel="canonical" href="http://zhaojun.me/2017/10/17/JVM-memory-model/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Java内存模型与线程 | 记录</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="记录" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">记录</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">我本可以</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://zhaojun.me/2017/10/17/JVM-memory-model/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="zj">
+      <meta itemprop="description" content="学了忘、忘了查、查了懵逼、懵逼了学。故有此博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="记录">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Java内存模型与线程
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-10-17 11:52:59" itemprop="dateCreated datePublished" datetime="2017-10-17T11:52:59+08:00">2017-10-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2017-10-23 23:26:46" itemprop="dateModified" datetime="2017-10-23T23:26:46+08:00">2017-10-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Jvm/" itemprop="url" rel="index"><span itemprop="name">Jvm</span></a>
+                </span>
+            </span>
+
+          
+            <div class="post-description">理解Java中多线程</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="1、硬件效率与一致性"><a href="#1、硬件效率与一致性" class="headerlink" title="1、硬件效率与一致性"></a>1、硬件效率与一致性</h3><p>由于计算机的存储设备与处理器的运算速度有几个数量级的差距，现在计算机系统都不得不加入一层读写速度尽可能接近处理器运算速度的高速缓存(Cache)来作为内存与处理器之间的缓冲：将需要用到的数据复制到缓存中，让运算快速进行，当运算结束后再从缓存同步回内存之中，这样处理器就无须等待缓慢的内存读写了。然而，因为每个处理器有自己的高速缓存，而它们又共享同一主内存，因此多处理器运算会导致各自缓存数据不一致，因此就需要遵循一些协议来访问缓存。  </p>
+<img src="/2017/10/17/JVM-memory-model/a.jpeg" class="" title="图1"> 
+
+<p>除了增加高速缓存外，为了使得处理器内部的运算单元能尽量被充分使用，处理器可能会对输入的代码进行乱序优化。但是会保证执行结果与顺序执行是一致的，但不保证程序中各个语句计算的先后顺序与输入代码的顺序一致。Java虚拟机的即时编译器也有类似的指令重排序优化。</p>
+<h3 id="2、Java内存模型"><a href="#2、Java内存模型" class="headerlink" title="2、Java内存模型"></a>2、Java内存模型</h3><p>Java内存模型主要目标是定义程序中各个变量的访问规则，即在虚拟机中将变量存储到内存和从内存中取出变量这样的底层细节。此处的变量与Java编程中的变量有所区别，它包括了实例字段、静态字段和构成数组对象的元素，但不包括局部变量与方法参数，因为后者是线程私有的。不会被共享，自然不存在竞争问题。</p>
+<p>Java内存模型规定所有的变量都存储在主内存中，每条线程还有自己的工作内存，线程的工作内存中保存了被线程使用到的变量的主内存副本拷贝，线程对变量的所有操作(读取、赋值等)都必须在工作内存中进行，而不能直接读写主内存的变量。不同线程之间也无法直接访问对方工作内存的变量，线程间的变量值的传递均需要通过主内存来完成。三者关系如下：</p>
+<img src="/2017/10/17/JVM-memory-model/b.jpeg" class="" title="图2"> 
+
+<h3 id="2、内存间的交互操作"><a href="#2、内存间的交互操作" class="headerlink" title="2、内存间的交互操作"></a>2、内存间的交互操作</h3><p>Java没存模型定义了八种操作来完成工作内存与主内存间的操作，虚拟机必须保证每一种操作都是原子的、不可再分的(double与long类型的变量，load、store、read、write操作在某些平台上允许有例外，见后续)</p>
+<ul>
+<li>lock(锁定):作用于主内存的变量，它把一个变量标识为一条线程独占的状态。</li>
+<li>unlock(解锁)：作用于主内存的变量，它把一个处于锁定状态的变量释放出来，释放后的变量才能被其他线程锁定</li>
+<li>read(读取)：作用于主内存的变量，把一个变量的值从主内存传输到线程的工作内存中，以便随后的load动作使用</li>
+<li>load(载入)：作用于工作内存的变量，它把read操作从主内存中得到的变量值放入工作内存的变量副本中</li>
+<li>use(使用)：作用于工作内存的变量，它把工作内存中的一个变量值传递给执行引擎，每当虚拟机遇到一个需要使用到的变量的值的字节码就会执行这个操作</li>
+<li>assign(赋值)：作用于工作内存的变量，它把一个执行引擎接收到的值赋值给工作内存的变量，每当虚拟机遇到一个需要使用到变量赋值的字节码指令时将会执行这个操作</li>
+<li>store(存储)：作用于工作内存的变量，它把工作内存中的一个变量值传送到主内存中，以便随后的write操作使用</li>
+<li>write(写入)：作用于主内存的变量，它把store操作从工作内存中得到变量的值放入主内存变量中</li>
+</ul>
+<p>如果要把一个变量从主内存复制到工作内存，那就要顺序的执行read和load操作，如果要同步回主内存，就要顺序执行store和write操作。注意是顺序，不必连续。除此之外。还有如下规则：</p>
+<ul>
+<li>不允许read和load、store和write操作之一单独出现，即不允许一个变量从主内存读取了但是工作内存不接受，或者从工作内存发起了回写但是主内存不接受的情况出现。</li>
+<li>不允许一个线程丢弃它最近的assign操作，即变量在工作内存中改变了之后必须同步回主内存。</li>
+<li>不允许一个线程无原因地(没有发生过任何assign操作)把数据从线程的工作内存同步回主内存</li>
+<li>一个变量只能在主内存中诞生。不允许在工作内存中直接使用未被初始化(load或assign)的变量，就是对一个变量实施use、store之前必须assign和load操作</li>
+<li>一个变量同一时刻只允许一条线成lock操作</li>
+<li>如果对一个变量执行lock操作，那将会清空工作内存中的此变量的值，在执行引擎使用这个变量钱，需要重新load和assign</li>
+<li>如果一个变量没有lock，那么不允许对它unlock，也不允许unlock一个被其他线程锁定住的变量</li>
+<li>执行lock之前，必须将此变量 同步回主内存(store和write)<br>另外对于volatile修饰的变量，当一个线程修改了改变量的值，会立即更新主存，并且其他线程看到该修饰符，会每次从主存来读而不是使用自己的缓存。因次就会每次读到最新的值。  </li>
+</ul>
+<p>对于64位的数据类型(long和double)，允许虚拟机对没有volatile修饰的64位数据的读写操作分为两次32位的操作来进行。这点就是所谓的long和double的非原子性协定。如果多个线程共享一个未声明为volatile的long或者double型变量，并同时对它们进行读写操作，可能会读取到一个既非原值，也不是其他线程修改值的代表了”半个变量”的数值，但是目前虚拟机都选择把64位数据的读写操作作为原子操作来对待，因此写代码时不需要专门声明为volatile。</p>
+<h3 id="3、先行发生-happens-before-原则"><a href="#3、先行发生-happens-before-原则" class="headerlink" title="3、先行发生(happens-before)原则"></a>3、先行发生(happens-before)原则</h3><p>先行发生原则就是如果A先行发生与操作B(就是A发生在B之前)，那么操作A产生的影响都能被操作B观察到，”影响”包括修改了内存中共享变量的值、发送了消息、调用了方法等。规定如下：</p>
+<ul>
+<li>程序次序规则：在一个线程内，按照程序代码顺序，书写在前面的操作先行发生于后面的操作(注意先行发生的定义，是影响会被观察到，没影响另说)。</li>
+<li>管程锁定规则：一个unlock操作先行发生于后面对同一个锁的locak操作。”后面”是时间的先后顺序</li>
+<li>volatile变量原则：对一个volatile变量的写操作先行发生于后面对这个变量的读操作。”后面”指时间的先后顺序</li>
+<li>线程启动规则： Thread对象的start()方法先行发生于此线程的每一个动作</li>
+<li>线程终止规则：线程所有操作都先行发生于此线程的终止检测。可以通过Thread.join()方法结束、Thread.isAlive()返回值等手段检测线程已经终止进行</li>
+<li>线程终端规则：对线程interrupt()方法的调用先行发生于被中断线程的代码检测到中断事件的发生，可以通过Thread.interrupted()方法检测是否有中断发生</li>
+<li>对象终结规则：一个对象的初始化完成(构造函数执行结束)先行于它的finalize()方法的开始</li>
+<li>传递性：如果A先行发生于B，B先行发生于C，那么A先行发生与C</li>
+</ul>
+<p>需要注意的是，先行发生跟时间上的先后发生没啥关系，先行发生只是表明，A的影响会被B给观察到。例如</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;以下操作在同一线程中执行</span><br><span class="line">int i &#x3D; 1;&#x2F;&#x2F;操作1</span><br><span class="line">int j &#x3D; 2;&#x2F;&#x2F;操作2</span><br></pre></td></tr></table></figure>
+<p>根据程序次序规则，操作1先行发生于操作2，但是操作2的代码完全可能被处理器先执行(因为指令重排序)，这并不影响先行发生原则的正确性，因为这条线程中，这俩赋值语句没啥互相影响。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Jvm/" rel="tag"># Jvm</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/09/24/Java-Exception/" rel="prev" title="Java异常">
+      <i class="fa fa-chevron-left"></i> Java异常
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2017/10/18/zookeeper2/" rel="next" title="zookeeper2">
+      zookeeper2 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E7%A1%AC%E4%BB%B6%E6%95%88%E7%8E%87%E4%B8%8E%E4%B8%80%E8%87%B4%E6%80%A7"><span class="nav-number">1.</span> <span class="nav-text">1、硬件效率与一致性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81Java%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.</span> <span class="nav-text">2、Java内存模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E5%86%85%E5%AD%98%E9%97%B4%E7%9A%84%E4%BA%A4%E4%BA%92%E6%93%8D%E4%BD%9C"><span class="nav-number">3.</span> <span class="nav-text">2、内存间的交互操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%E3%80%81%E5%85%88%E8%A1%8C%E5%8F%91%E7%94%9F-happens-before-%E5%8E%9F%E5%88%99"><span class="nav-number">4.</span> <span class="nav-text">3、先行发生(happens-before)原则</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">zj</p>
+  <div class="site-description" itemprop="description">学了忘、忘了查、查了懵逼、懵逼了学。故有此博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">79</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">75</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zj</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
